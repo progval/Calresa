@@ -1,0 +1,37 @@
+<table class="month">
+    <tr class="month-name">
+        <th colspan="7">{{ month.name }} {{ month.year }}</th>
+    </tr>
+    <tr class="weekdays">
+        <th>&nbsp;</th>
+        <th>Lu</th>
+        <th>Ma</th>
+        <th>Me</th>
+        <th>Je</th>
+        <th>Ve</th>
+        <th>Sa</th>
+        <th>Di</th>
+    </tr>
+    {% for week in month.weeks %}
+    <tr class="week">
+        <td class="week-number">
+            {% if week.number %}{{ week.number }}{% else %}&nbsp;{% endif %}
+        </td>
+        {% for day in week.days %}
+        <td class="day {% if day.is_current %}current-day{% endif %} {% if day.is_selected %}selected-day{% endif %}">
+            {% if day.is_selected %}
+            <a href="{{ url_for_unselect_date(month.year_number, month.number, day.number) }}">
+                {% if day.number %}{{ day.number }}{% else %}&nbsp;{% endif %}
+            </a>
+            {% elif day.number %}
+            <a href="{{ url_for_select_date(month.year_number, month.number, day.number) }}">
+                {{ day.number }}
+            </a>
+            {% else %}
+            &nbsp;
+            {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>

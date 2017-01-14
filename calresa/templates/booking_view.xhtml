@@ -1,0 +1,64 @@
+{% extends "base.xhtml" %}
+{% block body %}
+
+<div id="rooms-selection">
+    <ul class="rooms">
+        {% for (room_id, room_name) in rooms %}
+        <li class="room">{{ room_name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div id="months">
+    <a class="month-switch" href="{{ url_for_view_prev_month() }}">
+        previous
+    </a>
+    {% for month in months %}
+    {% include "calendar.xhtml" %}
+    {% endfor %}
+    <a class="month-switch" href="{{ url_for_view_next_month() }}">
+        next
+    </a>
+</div>
+
+<table id="timetable">
+    <tr class="dates">
+        <th></th>
+        {% for date in selected_dates %}
+        <th class="date" colspan="{{ rooms|length }}">{{ date|dateformat }}</th>
+        {% endfor %}
+    </tr>
+    <tr class="rooms">
+        <td></td>
+        {% for date in selected_dates %}
+        {% for (room_id, room_name) in rooms %}
+        <th class="room">{{ room_name }}</th>
+        {% endfor %}
+        {% endfor %}
+    </tr>
+    {% for quarterhour in quarterhours %}
+    <tr class="quarterhour {% if loop.index % 4 == 1 %}integer{% endif %}">
+        {% if loop.index % 4 == 1 %}
+        <td class="hour" rowspan="4">
+            {{ (loop.index/4) | int }}h
+        </td>
+        {% endif %}
+        {% for roomstate in quarterhour %}
+        {% if roomstate %} {# if not included in a previous rowspan #}
+        <td rowspan="{{ roomstate.rowspan }}" class="{{ roomstate.class_ }}"
+                {% if roomstate.description %}title="{{roomstate.description|e}}" {% endif %}>
+            {% if roomstate.period %}
+            <span class="period">{{ roomstate.period|e }}</span>
+            <br />
+            {% endif %}
+            {% if roomstate.description %}
+            <span class="description">{{ roomstate.description|e }}</span>
+            {% endif %}
+        </td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

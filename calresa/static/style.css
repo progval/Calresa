@@ -1,0 +1,72 @@
+html {
+    width: 100%;
+    margin: 0;
+}
+body {
+    width: 99%;
+    margin: auto;
+}
+h1 {
+    text-align: center;
+}
+#rooms-selection {
+    float: left;
+}
+#months {
+    float: right;
+}
+table.month {
+    table-layout: fixed;
+    display: inline-block;
+    border: 1px solid;
+    margin: 5px;
+}
+table.month td.day {
+    text-align: right;
+}
+table.month td.day a {
+    color: black;
+    text-decoration: none;
+}
+table.month td.current-day {
+    font-weight: bold;
+}
+table.month td.selected-day, table.month td.selected-day a {
+    color: red;
+}
+#timetable {
+    clear: both;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: center;
+}
+#timetable td.hour {
+    font-size: 0.8em;
+    vertical-align: top;
+}
+#timetable th {
+    border-left: black 1px solid;
+    border-right: black 1px solid;
+    border-top: black 1px solid;
+    word-wrap: break-word;
+}
+#timetable td {
+    border-left: black 1px solid;
+    border-right: black 1px solid;
+    padding: 0;
+    height: 0.4em;
+    max-height: 0.4em;
+    overflow: hidden;
+    white-space: nowrap;
+}
+#timetable .integer td {
+    border-top: black 1px solid;
+    padding: 0;
+}
+#timetable td.reserved {
+    background-color: #FFEEEE;
+}
+#timetable td.reserved .period {
+    font-weight: bold;
+}

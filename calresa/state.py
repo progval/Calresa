@@ -26,8 +26,6 @@ class State(_State):
             viewed_month = parse_month(args['viewed_month'])
         else:
             viewed_month = arrow.get(year=today.year, month=today.year, day=1)
-        print(args['viewed_month'])
-        print(viewed_month)
         if 'dates' in args:
             dates = tuple(sorted(map(parse_date, args['dates'].split(' '))))
         else:

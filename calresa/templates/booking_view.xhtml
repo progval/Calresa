@@ -11,15 +11,11 @@
 </div>
 
 <div id="months">
-    <a class="month-switch" href="{{ url_for_view_prev_month() }}">
-        previous
-    </a>
+    <a class="month-switch" href="{{ url_for_view_prev_month() }}">previous</a>
     {% for month in months %}
     {% include "calendar.xhtml" %}
     {% endfor %}
-    <a class="month-switch" href="{{ url_for_view_next_month() }}">
-        next
-    </a>
+    <a class="month-switch" href="{{ url_for_view_next_month() }}">next</a>
 </div>
 
 <table id="timetable">

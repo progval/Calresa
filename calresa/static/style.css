@@ -43,9 +43,11 @@ table.month td.selected-day, table.month td.selected-day a {
     table-layout: fixed;
     border-collapse: collapse;
     text-align: center;
+    border-bottom: black 1px solid;
+    margin-bottom: 5px;
+    font-size: 0.8em;
 }
 #timetable td.hour {
-    font-size: 0.8em;
     vertical-align: top;
 }
 #timetable th {
@@ -58,8 +60,7 @@ table.month td.selected-day, table.month td.selected-day a {
     border-left: black 1px solid;
     border-right: black 1px solid;
     padding: 0;
-    height: 0.4em;
-    max-height: 0.4em;
+    height: 0.5em;
     overflow: hidden;
     white-space: nowrap;
 }

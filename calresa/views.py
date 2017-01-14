@@ -63,7 +63,7 @@ def get_locale():
     preferred = [x.replace('-', '_') for x in request.accept_languages.values()]
     return negotiate_locale(preferred, AVAILABLE_LOCALES)
 
-with open('ics/names.json') as fd: # TODO
+with open('./names.json') as fd: # TODO
     rooms = json.load(fd)
 
 _calendar_cache = {} # id -> (last_update, calendar)
@@ -97,8 +97,8 @@ def booking_view():
 def room_selection():
     state = State.from_request_args(request.args)
     return render_template('room_selection.xhtml',
-            selected_rooms=list(map(str, state.rooms)),
-            all_rooms=list(rooms.items()),
+            selected_rooms=state.rooms,
+            all_rooms=[(int(i), n) for (i,n) in rooms.items()],
             serialized_state=urllib.parse.urlencode(state.to_request_args()),
             )
 

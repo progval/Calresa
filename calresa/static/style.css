@@ -9,11 +9,14 @@ body {
 h1 {
     text-align: center;
 }
-#rooms-selection {
+#rooms {
     float: left;
 }
 #months {
     float: right;
+}
+.month-switch {
+    vertical-align: top;
 }
 table.month {
     table-layout: fixed;

@@ -1,5 +1,6 @@
 import os
 import json
+import urllib
 import datetime
 import collections
 
@@ -23,6 +24,8 @@ def render_template(*args, **kwargs):
     kwargs['url_for_view_next_month'] = url_for_view_next_month
     kwargs['url_for_unselect_date'] = url_for_unselect_date
     kwargs['url_for_select_date'] = url_for_select_date
+    kwargs['url_for_room_selection'] = url_for_room_selection
+    kwargs['url_for_change_rooms'] = url_for_change_rooms
     resp = flask.make_response(flask.render_template(*args, **kwargs))
     resp.headers['Content-type'] = 'application/xhtml+xml; charset=utf-8'
     return resp
@@ -46,6 +49,14 @@ def url_for_select_date(year, month, day):
     state = State.from_request_args(request.args)
     state = state.select_date(datetime.date(year, month, day))
     return flask.url_for('booking_view', **state.to_request_args())
+
+def url_for_room_selection():
+    state = State.from_request_args(request.args)
+    return flask.url_for('room_selection', **state.to_request_args())
+
+def url_for_change_rooms():
+    state = State.from_request_args(request.args)
+    return flask.url_for('change_rooms', **state.to_request_args())
 
 @babel.localeselector
 def get_locale():
@@ -81,3 +92,21 @@ def booking_view():
             selected_dates=state.dates,
             quarterhours=build_table(state.dates, room_calendars),
             )
+
+@app.route('/select-rooms/')
+def room_selection():
+    state = State.from_request_args(request.args)
+    return render_template('room_selection.xhtml',
+            selected_rooms=list(map(str, state.rooms)),
+            all_rooms=list(rooms.items()),
+            serialized_state=urllib.parse.urlencode(state.to_request_args()),
+            )
+
+@app.route('/select-rooms/form-target', methods={'POST'})
+def change_rooms():
+    state = State.from_request_args(request.args)
+    if 'update' in request.form:
+        rooms = map(int, request.form.getlist('room'))
+        state = state.update_room_selection(rooms)
+    url = flask.url_for('booking_view', **state.to_request_args())
+    return flask.redirect(url)

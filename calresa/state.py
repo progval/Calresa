@@ -66,3 +66,9 @@ class State(_State):
             dates = self.dates + (date,)
         rooms = self.rooms
         return self.__class__(viewed_month=viewed_month, dates=dates, rooms=rooms)
+
+    def update_room_selection(self, rooms):
+        viewed_month = self.viewed_month
+        dates = self.dates
+        rooms = tuple(rooms)
+        return self.__class__(viewed_month=viewed_month, dates=dates, rooms=rooms)

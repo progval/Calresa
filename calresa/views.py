@@ -1,3 +1,4 @@
+import os
 import json
 import datetime
 import collections
@@ -54,13 +55,26 @@ def get_locale():
 with open('ics/names.json') as fd: # TODO
     rooms = json.load(fd)
 
+_calendar_cache = {} # id -> (last_update, calendar)
+def load_calendar(id_):
+    global _calendar_cache
+    path = 'ics/{}.ics'.format(id_) # TODO
+    last_update = os.stat(path).st_mtime
+    if id_ not in _calendar_cache or _calendar_cache[id_][0] < last_update:
+        with open(path) as fd:
+            calendar = ics.Calendar(fd.read())
+        _calendar_cache[id_] = (last_update, calendar)
+        return calendar
+    else:
+        return _calendar_cache[id_][1]
+
+
 @app.route('/')
 def booking_view():
     state = State.from_request_args(request.args)
     room_calendars = []
     for room in state.rooms:
-        with open('ics/{}.ics'.format(room)) as fd: # TODO
-            room_calendars.append(ics.Calendar(fd.read()))
+        room_calendars.append(load_calendar(room))
     return render_template('booking_view.xhtml',
             rooms=[(n, rooms[str(n)]) for n in state.rooms],
             months=get_calendar_months(state.dates, state.viewed_month),

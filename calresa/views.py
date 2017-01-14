@@ -17,6 +17,7 @@ from .roomstate import build_table
 AVAILABLE_LOCALES = ['fr', 'en']
 
 app = flask.Flask(__name__)
+app.config.from_envvar('CALRESA_SETTINGS')
 babel = flask_babel.Babel(app)
 
 def render_template(*args, **kwargs):
@@ -63,13 +64,10 @@ def get_locale():
     preferred = [x.replace('-', '_') for x in request.accept_languages.values()]
     return negotiate_locale(preferred, AVAILABLE_LOCALES)
 
-with open('./names.json') as fd: # TODO
-    rooms = json.load(fd)
-
 _calendar_cache = {} # id -> (last_update, calendar)
 def load_calendar(id_):
     global _calendar_cache
-    path = 'ics/{}.ics'.format(id_) # TODO
+    path = os.path.join(app.config['ICS_DIR'], '{}.ics'.format(id_))
     last_update = os.stat(path).st_mtime
     if id_ not in _calendar_cache or _calendar_cache[id_][0] < last_update:
         with open(path) as fd:
@@ -82,12 +80,15 @@ def load_calendar(id_):
 
 @app.route('/')
 def booking_view():
+    with open(app.config['NAMES_JSON']) as fd:
+        room_names = json.load(fd)
+
     state = State.from_request_args(request.args)
     room_calendars = []
     for room in state.rooms:
         room_calendars.append(load_calendar(room))
     return render_template('booking_view.xhtml',
-            rooms=[(n, rooms[str(n)]) for n in state.rooms],
+            rooms=[(n, room_names[str(n)]) for n in state.rooms],
             months=get_calendar_months(state.dates, state.viewed_month),
             selected_dates=state.dates,
             quarterhours=build_table(state.dates, room_calendars),

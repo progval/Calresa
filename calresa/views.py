@@ -78,7 +78,7 @@ def load_calendar(id_):
     path = os.path.join(app.config['ICS_DIR'], '{}.ics'.format(id_))
     last_update = os.stat(path).st_mtime
     if id_ not in _calendar_cache or _calendar_cache[id_][0] < last_update:
-        with open(path) as fd:
+        with open(path, encoding='utf8') as fd:
             calendar = ics.Calendar(fd.read())
         _calendar_cache[id_] = (last_update, calendar)
         return calendar

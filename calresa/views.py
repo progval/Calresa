@@ -17,8 +17,16 @@ from .roomstate import build_table
 AVAILABLE_LOCALES = ['fr', 'en']
 
 app = flask.Flask(__name__)
+app.config['CAS_AFTER_LOGIN'] = 'booking_view'
 app.config.from_envvar('CALRESA_SETTINGS')
 babel = flask_babel.Babel(app)
+
+if app.config['CAS_SERVER']:
+    from flask_cas import CAS, login_required
+    cas = CAS(app)
+else:
+    cas = None
+    login_required = lambda f: f
 
 def render_template(*args, **kwargs):
     kwargs['url_for_view_prev_month'] = url_for_view_prev_month
@@ -79,6 +87,7 @@ def load_calendar(id_):
 
 
 @app.route('/')
+@login_required
 def booking_view():
     with open(app.config['NAMES_JSON']) as fd:
         room_names = json.load(fd)
@@ -95,6 +104,7 @@ def booking_view():
             )
 
 @app.route('/select-rooms/')
+@login_required
 def room_selection():
     state = State.from_request_args(request.args)
     return render_template('room_selection.xhtml',
@@ -104,6 +114,7 @@ def room_selection():
             )
 
 @app.route('/select-rooms/form-target', methods={'POST'})
+@login_required
 def change_rooms():
     state = State.from_request_args(request.args)
     if 'update' in request.form:

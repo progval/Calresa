@@ -1,0 +1,2 @@
+recursive-include calresa/templates *
+recursive-include calresa/static *

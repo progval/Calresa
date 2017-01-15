@@ -27,10 +27,10 @@ class State(_State):
         else:
             viewed_month = arrow.get(year=today.year, month=today.year, day=1)
         if 'dates' in args:
-            dates = tuple(sorted(map(parse_date, args['dates'].split(' '))))
+            dates = tuple(sorted(map(parse_date, args['dates'].split())))
         else:
             dates = (today,)
-        rooms = tuple(map(int, filter(bool, args.get('rooms', '').split(' '))))
+        rooms = tuple(map(int, filter(bool, args.get('rooms', '').split())))
         return Cls(viewed_month=viewed_month, dates=dates, rooms=rooms)
 
     def to_request_args(self):

@@ -37,8 +37,8 @@ def is_selected_day(year, month, day, selected_dates):
 def get_calendar_month(year, month, selected_dates):
     (first_weekday, number_of_days) = calendar.monthrange(year, month)
     weeks = []
-    days = [NO_DAY]*(first_weekday-1)
-    for day in range(number_of_days+1):
+    days = [NO_DAY]*(first_weekday)
+    for day in range(1, number_of_days+1):
         days.append(CalendarDay(number=day,
             is_current=is_current_day(year, month, day),
             is_selected=is_selected_day(year, month, day, selected_dates),

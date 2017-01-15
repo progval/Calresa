@@ -1,0 +1,9 @@
+{% extends "base.xhtml" %}
+{% block body %}
+
+<ul>
+    <li><a href="{{ url_for_shift_all_dates(-1) }}">Shift all dates one day before</a></li>
+    <li><a href="{{ url_for_shift_all_dates(+1) }}">Shift all dates one day later</a></li>
+</ul>
+
+{% endblock %}

@@ -72,3 +72,10 @@ class State(_State):
         dates = self.dates
         rooms = tuple(rooms)
         return self.__class__(viewed_month=viewed_month, dates=dates, rooms=rooms)
+
+    def shift_all_dates(self, shift):
+        shift = datetime.timedelta(days=shift)
+        viewed_month = self.viewed_month
+        dates = tuple(d+shift for d in self.dates)
+        rooms = self.rooms
+        return self.__class__(viewed_month=viewed_month, dates=dates, rooms=rooms)

@@ -35,6 +35,8 @@ def render_template(*args, **kwargs):
     kwargs['url_for_select_date'] = url_for_select_date
     kwargs['url_for_room_selection'] = url_for_room_selection
     kwargs['url_for_change_rooms'] = url_for_change_rooms
+    kwargs['url_for_shortcuts'] = url_for_shortcuts
+    kwargs['url_for_shift_all_dates'] = url_for_shift_all_dates
     resp = flask.make_response(flask.render_template(*args, **kwargs))
     resp.headers['Content-type'] = 'application/xhtml+xml; charset=utf-8'
     return resp
@@ -66,6 +68,15 @@ def url_for_room_selection():
 def url_for_change_rooms():
     state = State.from_request_args(request.args)
     return flask.url_for('change_rooms', **state.to_request_args())
+
+def url_for_shortcuts():
+    state = State.from_request_args(request.args)
+    return flask.url_for('shortcuts', **state.to_request_args())
+
+def url_for_shift_all_dates(shift):
+    state = State.from_request_args(request.args)
+    state = state.shift_all_dates(shift)
+    return flask.url_for('booking_view', **state.to_request_args())
 
 @babel.localeselector
 def get_locale():
@@ -125,3 +136,11 @@ def change_rooms():
         state = state.update_room_selection(rooms)
     url = flask.url_for('booking_view', **state.to_request_args())
     return flask.redirect(url)
+
+@app.route('/shortcuts/')
+@login_required
+def shortcuts():
+    state = State.from_request_args(request.args)
+    return render_template('shortcuts.xhtml',
+            serialized_state=urllib.parse.urlencode(state.to_request_args()),
+            )

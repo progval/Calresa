@@ -12,6 +12,9 @@ h1 {
 #rooms {
     float: left;
 }
+#batch {
+    clear: left;
+}
 #months {
     float: right;
 }

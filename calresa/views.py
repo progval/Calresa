@@ -106,10 +106,13 @@ def booking_view():
 @app.route('/select-rooms/')
 @login_required
 def room_selection():
+    with open(app.config['NAMES_JSON']) as fd:
+        room_names = json.load(fd)
+
     state = State.from_request_args(request.args)
     return render_template('room_selection.xhtml',
             selected_rooms=state.rooms,
-            all_rooms=[(int(i), n) for (i,n) in rooms.items()],
+            all_rooms=[(int(i), n) for (i,n) in room_names.items()],
             serialized_state=urllib.parse.urlencode(state.to_request_args()),
             )
 

@@ -1,6 +1,6 @@
 import os
 import json
-import urllib.request, urllib.parse, urllib.error
+import urllib
 import datetime
 import collections
 
@@ -80,7 +80,7 @@ def url_for_shift_all_dates(shift):
 
 @babel.localeselector
 def get_locale():
-    preferred = [x.replace('-', '_') for x in list(request.accept_languages.values())]
+    preferred = [x.replace('-', '_') for x in request.accept_languages.values()]
     return negotiate_locale(preferred, AVAILABLE_LOCALES)
 
 _calendar_cache = {} # id -> (last_update, calendar)
@@ -123,7 +123,7 @@ def room_selection():
     state = State.from_request_args(request.args)
     return render_template('room_selection.xhtml',
             selected_rooms=state.rooms,
-            all_rooms=[(int(i), n) for (i,n) in list(room_names.items())],
+            all_rooms=[(int(i), n) for (i,n) in room_names.items()],
             serialized_state=urllib.parse.urlencode(state.to_request_args()),
             )
 
@@ -132,7 +132,7 @@ def room_selection():
 def change_rooms():
     state = State.from_request_args(request.args)
     if 'update' in request.form:
-        rooms = list(map(int, request.form.getlist('room')))
+        rooms = map(int, request.form.getlist('room'))
         state = state.update_room_selection(rooms)
     url = flask.url_for('booking_view', **state.to_request_args())
     return flask.redirect(url)
